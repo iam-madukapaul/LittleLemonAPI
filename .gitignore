@@ -1,0 +1,13 @@
+# Virtual environment  
+venv/  
+pipenv.lock  
+pipfile
+
+# Environment variables  
+.env  
+
+# Django and Python-related ignores  
+__pycache__/  
+db.sqlite3  
+*.pyc  
+*.pyo 
