@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-#%rpgfn*kk@lbptc7#v&671)qxau+61#e%*&yzz+2%w%w7%33k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app']
 
 
 # Application definition
@@ -37,11 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'LittleLemonAPI',
+    #Third Party
+    
     'rest_framework',
     'djoser',
     'rest_framework.authtoken',
     'django_filters',
-    'LittleLemonAPI',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -169,5 +172,18 @@ DJOSER = {
 #     'USER_SERIALIZER': 'rest_framework.serializers.ModelSerializer',
 #     'LOGIN_FIELD': 'email',
 # }
+
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
+}
+
+
 
 

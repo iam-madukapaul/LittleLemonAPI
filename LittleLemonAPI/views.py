@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework.permissions import BasePermission
 from rest_framework.exceptions import NotFound
+from drf_yasg.utils import swagger_auto_schema
 
 # Custom permission to allow only managers to modify menu items
 class IsManager(BasePermission):
@@ -25,6 +26,12 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
     permission_classes = [IsManager]
+    # Apply the swagger decorator to the list method to document it
+    @swagger_auto_schema(operation_summary='List of all menu items')
+    def list(self, request, *args, **kwargs):
+        # The logic for listing all menu items
+        return super().list(request, *args, **kwargs)
+    
     
     # Enable search, ordering, and filtering 
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter] 
@@ -48,9 +55,11 @@ class SingleMenuItemView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = MenuItemSerializer
     permission_classes = [IsManager]
     
+    
 
 class ManagerUserManagementView(APIView):
     permission_classes = [IsAdminUser]  # Only Admins can manage managers
+    @swagger_auto_schema(operation_summary='List of all manager')
 
     def get(self, request):
         """List all users in the 'Manager' group."""
@@ -61,6 +70,7 @@ class ManagerUserManagementView(APIView):
         except Group.DoesNotExist:
             return Response({"error": "Manager group does not exist"}, status=status.HTTP_404_NOT_FOUND)
 
+    @swagger_auto_schema(operation_summary='Add a user to the "Manager" group')
     def post(self, request):
         """Add a user to the 'Manager' group using username."""
         username = request.data.get("username")
@@ -77,6 +87,7 @@ class ManagerUserManagementView(APIView):
 
 class SingleManagerUserView(APIView):
     permission_classes = [IsAdminUser]  # Only Admins can remove managers
+    @swagger_auto_schema(operation_summary='Delete manager')
 
     def delete(self, request, username):
         """Remove a user from the 'Manager' group using username."""
